@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louisville Stallions - Elite Jersey Retirement Command Center</title>
+    <meta name="description" content="Official Louisville Stallions Jersey Retirement Tracker - Championship Window Year 2 of 3">
+    <meta name="keywords" content="Louisville Stallions, NFL, Jersey Retirement, Hall of Fame, Championship">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐎</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4);
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .franchise-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .status-chip {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(45deg, #f97316 0%, #ea580c 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .player-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.8));
+            border-radius: 18px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(249, 115, 22, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(249, 115, 22, 0.6);
+        }
+
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f97316, #ea580c, #dc2626);
+        }
+
+        .jersey-number {
+            font-size: 4em;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            opacity: 0.2;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-name {
+            font-size: 1.9em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #f97316;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .player-position {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .player-stats {
+            margin: 18px 0;
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        .achievement-highlight {
+            background: linear-gradient(45deg, rgba(249, 115, 22, 0.2), rgba(234, 88, 12, 0.1));
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #f97316;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-top: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-retired {
+            background: linear-gradient(45deg, #10b981, #34d399);
+            color: #ffffff;
+        }
+
+        .status-pending {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+            color: #000000;
+        }
+
+        .status-active {
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            color: #ffffff;
+        }
+
+        .status-honored {
+            background: linear-gradient(45deg, #8b5cf6, #a78bfa);
+            color: #ffffff;
+        }
+
+        .status-future {
+            background: linear-gradient(45deg, #ec4899, #f472b6);
+            color: #ffffff;
+        }
+
+        .player-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+            padding: 35px;
+            border-radius: 18px;
+            border: 2px solid rgba(249, 115, 22, 0.4);
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f97316;
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(249, 115, 22, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .command-log {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.4), rgba(15, 23, 42, 0.6));
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .command-log h3 {
+            margin-bottom: 18px;
+            color: #f97316;
+            font-size: 1.4em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-left: 4px solid #f97316;
+            padding-left: 15px;
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .log-entry:hover {
+            background: rgba(249, 115, 22, 0.2);
+        }
+
+        .timestamp {
+            color: #fbbf24;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .franchise-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.4));
+            border-radius: 15px;
+            border: 2px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #f97316;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-section {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .legend-section h3 {
+            color: #f97316;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border-radius: 15px;
+            border: 2px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .github-link {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .github-link:hover {
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .franchise-status {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 8px;
+            }
+            
+            .player-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                padding: 25px;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐎 LOUISVILLE STALLIONS 🐎</h1>
+        <p class="subtitle">Elite Jersey Retirement Command Center</p>
+        <div class="franchise-status">
+            <div class="status-chip">5-1 Record (.833)</div>
+            <div class="status-chip">#3 Overall Ranking</div>
+            <div class="status-chip">246 PF Explosive</div>
+            <div class="status-chip">Championship Window</div>
+            <div class="status-chip">AFC North Leaders</div>
+            <div class="status-chip">5-Game Win Streak</div>
+        </div>
+    </div>
+
+    <div class="franchise-stats">
+        <div class="stat-item">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Retired Jersey</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Retirement Candidates</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Active Legends</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">2037</div>
+            <div class="stat-label">Championship Year</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">$152M</div>
+            <div class="stat-label">Rudolph Decision</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="showAddPlayerModal()">Add New Legend</button>
+        <button class="btn btn-success" onclick="processRetirements()">Process Retirement Queue</button>
+        <button class="btn btn-info" onclick="updateChampionshipStatus()">Championship Update</button>
+        <button class="btn btn-warning" onclick="exportData()">Export Hall of Fame Data</button>
+    </div>
+
+    <div class="legend-section">
+        <h3>🏆 FRANCHISE LEGENDS & JERSEY RETIREMENT STANDARDS</h3>
+        <div class="achievement-highlight">
+            <strong>🎯 Jersey Retirement Criteria:</strong> Transformative franchise impact + Statistical excellence + Awards & recognition + Championship culture + Unique legendary stories
+        </div>
+        <div class="achievement-highlight">
+            <strong>⚡ Current Championship Window:</strong> Year 2 of 3 with Tolbert (94 OVR X-Factor) - Prime opportunity for multiple retirements with title
+        </div>
+        <div class="achievement-highlight">
+            <strong>💰 Week 8-9 Decision:</strong> DaVonte Rudolph $152M contract choice will determine immediate retirement timeline
+        </div>
+    </div>
+
+    <div class="player-grid" id="playerGrid">
+        <!-- Players will be dynamically loaded here -->
+    </div>
+
+    <div class="command-log">
+        <h3>🏛️ Hall of Fame Command Log</h3>
+        <div id="logContainer">
+            <div class="log-entry">
+                <span class="timestamp">[FRANCHISE INIT]</span> Louisville Stallions Jersey Retirement System activated - Championship standards established
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Player Modal -->
+    <div id="addPlayerModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 25px; color: #f97316; text-align: center;">Add New Franchise Legend</h2>
+            <div class="form-group">
+                <label>Jersey Number</label>
+                <input type="number" id="newJerseyNumber" placeholder="Enter jersey number" min="1" max="99">
+            </div>
+            <div class="form-group">
+                <label>Player Name</label>
+                <input type="text" id="newPlayerName" placeholder="Enter player name">
+            </div>
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" id="newPlayerPosition" placeholder="QB, RB, WR, etc.">
+            </div>
+            <div class="form-group">
+                <label>Years Played</label>
+                <input type="text" id="newPlayerYears" placeholder="2029-2037">
+            </div>
+            <div class="form-group">
+                <label>Career Stats & Achievements</label>
+                <textarea id="newPlayerStats" placeholder="Enter key career achievements, statistics, awards, and legendary moments" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Retirement Status</label>
+                <select id="newPlayerStatus">
+                    <option value="ACTIVE LEGEND">Active Legend</option>
+                    <option value="DECISION PENDING">Decision Pending</option>
+                    <option value="HONORED VETERAN">Honored Veteran</option>
+                    <option value="FUTURE CANDIDATE">Future Candidate</option>
+                    <option value="RETIRED">Retired</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 25px; justify-content: center;">
+                <button class="btn btn-success" onclick="addPlayer()">Add to Hall of Fame</button>
+                <button class="btn btn-warning" onclick="closeModal('addPlayerModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🏆 Louisville Stallions Franchise Command Center</p>
+        <p>Powered by GitHub Pages | <a href="https://github.com" class="github-link" target="_blank">View Source</a></p>
+        <p>Year 2 of 3 Championship Window - Make Every Legend Count</p>
+    </div>
+
+    <script>
+        // Enhanced player database with complete franchise information
+        let players = [
+            {
+                id: 1,
+                jerseyNumber: 93,
+                name: "Paul Simpson",
+                position: "DT",
+                years: "2026-2035",
+                stats: "116 career sacks • DPOY 2033 • #1 Overall Pick (2026) • First jersey retirement in franchise history • Foundation of championship culture • 10-year franchise cornerstone",
+                status: "RETIRED",
+                achievements: "🏆 First jersey retirement • 🛡️ 116 career sacks • 🥇 DPOY 2033 • 🎯 #1 Overall Pick • 🏛️ Franchise foundation",
+                legacy: "The player who started it all - set championship standards and defensive culture"
+            },
+            {
+                id: 2,
+                jerseyNumber: 15,
+                name: "DaVonte Rudolph",
+                position: "WR",
+                years: "2029-Present",
+                stats: "655 receptions, 7,513 yards, 56 TDs • OPOY Winner (2034: 125/1,874/17) • Franchise record holder in ALL major receiving categories • Single-season record: 140 catches (2035)",
+                status: "DECISION PENDING",
+                achievements: "🏆 OPOY Winner (2034) • 📊 Franchise record holder (ALL receiving records) • 🔥 140 catches (2035 record) • 💎 #19 overall pick (2029)",
+                legacy: "Statistical king of Louisville receivers - owns every major franchise receiving record"
+            },
+            {
+                id: 3,
+                jerseyNumber: 22,
+                name: "Kalon Greene",
+                position: "RB",
+                years: "2031-Present",
+                stats: "3,852+ yards, 43+ TDs • 2x Pro Bowl • Best RB Award • 85 OVR Elite • 5.9 YPC (2036) career best • Still improving at age 27 in championship window",
+                status: "ACTIVE LEGEND",
+                achievements: "⚡ 2x Pro Bowl • 🏆 Best RB Award • 📈 85 OVR Elite rating • 🔥 5.9 YPC career best • 💎 'I like his name' 6th round gem",
+                legacy: "Ultimate development success story - from vanity pick to elite franchise RB1"
+            },
+            {
+                id: 4,
+                jerseyNumber: 13,
+                name: "Brian Tucker",
+                position: "QB",
+                years: "2025-2036 (Louisville: 2031-2034)",
+                stats: "21,711+ career yards, 173+ TDs • 14-year veteran • Louisville: 17,849 yards, 137 TDs • From 31 INTs (guinea pig year) to Birmingham success • UDFA to veteran leader",
+                status: "HONORED VETERAN",
+                achievements: "🛡️ 14-year career • 📊 21,711+ yards, 173+ TDs • 🐸 Guinea pig resilience (31 INTs → success) • 💪 UDFA to veteran",
+                legacy: "Ultimate perseverance story - proves that resilience creates legendary careers"
+            },
+            {
+                id: 5,
+                jerseyNumber: 16,
+                name: "Jayden Tolbert",
+                position: "QB",
+                years: "2034-Present (Louisville: 2036-Present)",
+                stats: "94 OVR X-Factor • OROY (2036) • Best QB • 2x Pro Bowl • League Leader pass rating (117.0) • 8,110+ yards, 75+ TDs • Acquired via greatest trade heist in sports history",
+                status: "FUTURE CANDIDATE",
+                achievements: "🏆 OROY (2036) • 🎯 Best QB • 🌟 2x Pro Bowl • 📊 League Leader (117.0 rating) • 🚨 Greatest trade heist victim • 💎 94 OVR X-Factor",
+                legacy: "Championship foundation QB - leading Year 2 of 3-year window with explosive offense"
+            },
+            {
+                id: 6,
+                jerseyNumber: 87,
+                name: "Luke Becker",
+                position: "TE",
+                years: "2035-Present",
+                stats: "Emerging star • 17.2 YPC efficiency • Week 3 breakout: 11 targets, 164 yards, 1 TD • Key weapon in Tolbert's 246 PF explosive offense • 2035 draft pick becoming immediate contributor",
+                status: "FUTURE CANDIDATE",
+                achievements: "🚀 17.2 YPC efficiency • ⚡ Week 3 breakout (164 yards) • 🎯 Tolbert's favorite target • 📈 2035 pick immediate impact",
+                legacy: "Emerging weapon in championship window - perfect timing for franchise impact"
+            }
+        ];
+
+        function getStatusClass(status) {
+            switch(status) {
+                case "RETIRED": return "status-retired";
+                case "DECISION PENDING": return "status-pending";
+                case "ACTIVE LEGEND": return "status-active";
+                case "HONORED VETERAN": return "status-honored";
+                case "FUTURE CANDIDATE": return "status-future";
+                default: return "status-pending";
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case "RETIRED": return "🏆";
+                case "DECISION PENDING": return "⏳";
+                case "ACTIVE LEGEND": return "⚡";
+                case "HONORED VETERAN": return "🛡️";
+                case "FUTURE CANDIDATE": return "🌟";
+                default: return "❓";
+            }
+        }
+
+        function renderPlayers() {
+            const grid = document.getElementById('playerGrid');
+            grid.innerHTML = '';
+
+            // Sort players by retirement status priority
+            const sortedPlayers = [...players].sort((a, b) => {
+                const statusOrder = { "RETIRED": 1, "DECISION PENDING": 2, "ACTIVE LEGEND": 3, "HONORED VETERAN": 4, "FUTURE CANDIDATE": 5 };
+                return statusOrder[a.status] - statusOrder[b.status];
+            });
+
+            sortedPlayers.forEach(player => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.innerHTML = `
+                    <div class="jersey-number">#${player.jerseyNumber}</div>
+                    <div class="player-name">${getStatusIcon(player.status)} ${player.name}</div>
+                    <div class="player-position">${player.position} • ${player.years}</div>
+                    <div class="player-stats">${player.stats}</div>
+                    ${player.achievements ? `<div class="achievement-highlight"><strong>🏆 Key Achievements:</strong><br>${player.achievements}</div>` : ''}
+                    ${player.legacy ? `<div class="achievement-highlight"><strong>🏛️ Legacy:</strong> ${player.legacy}</div>` : ''}
+                    <div class="status-badge ${getStatusClass(player.status)}">${player.status}</div>
+                    <div class="player-actions">
+                        <button class="btn-small" style="background: #667eea; color: white;" onclick="updateStatus(${player.id})">Update Status</button>
+                        <button class="btn-small" style="background: #f97316; color: white;" onclick="editPlayer(${player.id})">Edit Legend</button>
+                        <button class="btn-small" style="background: #10b981; color: white;" onclick="viewCareerStats(${player.id})">Career Stats</button>
+                        <button class="btn-small" style="background: #ff6b6b; color: white;" onclick="removePlayer(${player.id})">Remove</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addLogEntry(message) {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function showAddPlayerModal() {
+            document.getElementById('addPlayerModal').style.display = 'block';
+            addLogEntry("Opening Add New Legend form - expanding Hall of Fame database");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function addPlayer() {
+            const jerseyNumber = document.getElementById('newJerseyNumber').value;
+            const name = document.getElementById('newPlayerName').value;
+            const position = document.getElementById('newPlayerPosition').value;
+            const years = document.getElementById('newPlayerYears').value;
+            const stats = document.getElementById('newPlayerStats').value;
+            const status = document.getElementById('newPlayerStatus').value;
+
+            if (!jerseyNumber || !name || !position) {
+                alert('Please fill in jersey number, name, and position - these are required for Hall of Fame tracking');
+                return;
+            }
+
+            // Check for duplicate jersey number
+            if (players.find(p => p.jerseyNumber == jerseyNumber)) {
+                alert(`Jersey #${jerseyNumber} already exists in Hall of Fame! Choose a different number.`);
+                return;
+            }
+
+            const newPlayer = {
+                id: Date.now(),
+                jerseyNumber: parseInt(jerseyNumber),
+                name,
+                position,
+                years: years || "Present",
+                stats: stats || "Career building - stats to be updated",
+                status,
+                achievements: "🌟 Newly added to Hall of Fame tracking",
+                legacy: "Franchise legend in development"
+            };
+
+            players.push(newPlayer);
+            addLogEntry(`🏆 LEGEND ADDED: #${jerseyNumber} ${name} (${position}) - ${status} status confirmed`);
+            
+            // Clear form
+            document.getElementById('newJerseyNumber').value = '';
+            document.getElementById('newPlayerName').value = '';
+            document.getElementById('newPlayerPosition').value = '';
+            document.getElementById('newPlayerYears').value = '';
+            document.getElementById('newPlayerStats').value = '';
+            
+            closeModal('addPlayerModal');
+            renderPlayers();
+        }
+
+        function updateStatus(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            const statuses = ["FUTURE CANDIDATE", "ACTIVE LEGEND", "DECISION PENDING", "HONORED VETERAN", "RETIRED"];
+            const currentIndex = statuses.indexOf(player.status);
+            const nextIndex = (currentIndex + 1) % statuses.length;
+            
+            const oldStatus = player.status;
+            player.status = statuses[nextIndex];
+            
+            // Special handling for retirement decision
+            if (player.status === "RETIRED") {
+                addLogEntry(`🏛️ JERSEY RETIREMENT: #${player.jerseyNumber} ${player.name} officially RETIRED! 🏆`);
+                
+                // Update stats for special cases
+                if (player.name === "DaVonte Rudolph" && player.status === "RETIRED") {
+                    addLogEntry(`💰 $152M Decision Made: Rudolph retires as franchise legend with ALL receiving records`);
+                }
+            } else {
+                addLogEntry(`📊 Status Update: #${player.jerseyNumber} ${player.name} - ${oldStatus} → ${player.status}`);
+            }
+            
+            renderPlayers();
+        }
+
+        function editPlayer(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            const newStats = prompt(`📊 Edit career stats & achievements for #${player.jerseyNumber} ${player.name}:`, player.stats);
+            if (newStats !== null && newStats.trim() !== '') {
+                player.stats = newStats;
+                addLogEntry(`📈 Career Update: #${player.jerseyNumber} ${player.name} stats and achievements updated`);
+                renderPlayers();
+            }
+        }
+
+        function viewCareerStats(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            let careerInfo = `🏆 CAREER STATISTICS - ${player.name} #${player.jerseyNumber}\n\n`;
+            careerInfo += `Position: ${player.position}\n`;
+            careerInfo += `Years: ${player.years}\n`;
+            careerInfo += `Status: ${player.status}\n\n`;
+            careerInfo += `📊 Career Stats & Achievements:\n${player.stats}\n\n`;
+            
+            if (player.achievements) {
+                careerInfo += `🏆 Key Achievements:\n${player.achievements}\n\n`;
+            }
+            
+            if (player.legacy) {
+                careerInfo += `🏛️ Franchise Legacy:\n${player.legacy}`;
+            }
+
+            alert(careerInfo);
+            addLogEntry(`📖 Viewed career statistics for #${player.jerseyNumber} ${player.name}`);
+        }
+
+        function removePlayer(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            if (confirm(`⚠️ Remove #${player.jerseyNumber} ${player.name} from Hall of Fame tracking?\n\nThis will permanently delete their record from the system.`)) {
+                players = players.filter(p => p.id !== playerId);
+                addLogEntry(`🗑️ REMOVED: #${player.jerseyNumber} ${player.name} deleted from Hall of Fame database`);
+                renderPlayers();
+            }
+        }
+
+        function processRetirements() {
+            const pendingPlayers = players.filter(p => p.status === "DECISION PENDING");
+            if (pendingPlayers.length === 0) {
+                addLogEntry("📋 No retirement decisions pending - all legends status confirmed");
+                return;
+            }
+
+            addLogEntry(`🎯 Processing ${pendingPlayers.length} retirement decisions...`);
+
+            pendingPlayers.forEach(player => {
+                // Simulate retirement committee decision
+                const shouldRetire = Math.random() > 0.4; // 60% chance of retirement
+                const newStatus = shouldRetire ? "RETIRED" : "HONORED VETERAN";
+                player.status = newStatus;
+                
+                if (shouldRetire) {
+                    addLogEntry(`🏛️ JERSEY RETIREMENT: #${player.jerseyNumber} ${player.name} → RETIRED! Number permanently honored 🏆`);
+                } else {
+                    addLogEntry(`🛡️ HONORED VETERAN: #${player.jerseyNumber} ${player.name} → Veteran status, jersey remains active`);
+                }
+            });
+
+            renderPlayers();
+        }
+
+        function updateChampionshipStatus() {
+            const activeLength = players.filter(p => p.status === "ACTIVE LEGEND").length;
+            const futureLength = players.filter(p => p.status === "FUTURE CANDIDATE").length;
+            
+            addLogEntry(`🏆 CHAMPIONSHIP UPDATE: 5-1 record, #3 ranking - ${activeLength} active legends, ${futureLength} future candidates tracking`);
+            addLogEntry(`⚡ Championship Window: Year 2 of 3 with Tolbert - prime retirement opportunity with title`);
+            addLogEntry(`💰 Week 8-9: DaVonte Rudolph $152M decision incoming - major retirement implications`);
+        }
+
+        function exportData() {
+            const retiredPlayers = players.filter(p => p.status === "RETIRED");
+            const candidatePlayers = players.filter(p => p.status !== "RETIRED");
+            
+            const data = {
+                franchise: "Louisville Stallions",
+                season: "2037",
+                championshipStatus: "Year 2 of 3 - Championship Window",
+                record: "5-1 (.833)",
+                ranking: "#3 Overall",
+                exportTimestamp: new Date().toISOString(),
+                retiredJerseys: retiredPlayers,
+                retirementCandidates: candidatePlayers,
+                totalLegends: players.length,
+                franchiseStats: {
+                    retiredNumbers: retiredPlayers.length,
+                    activeLegends: players.filter(p => p.status === "ACTIVE LEGEND").length,
+                    pendingDecisions: players.filter(p => p.status === "DECISION PENDING").length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stallions_hall_of_fame_2037.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            addLogEntry(`💾 EXPORT COMPLETE: Hall of Fame database exported - ${players.length} legends documented`);
+        }
+
+        // Initialize the enhanced tracker
+        renderPlayers();
+        addLogEntry("🏛️ FRANCHISE LEGENDS DATABASE: All player data loaded - Championship window tracking active");
+        addLogEntry("🏆 Current Status: 5-1 record, #3 ranking, Year 2 of 3 championship window");
+        addLogEntry("⚡ Explosive Offense: 246 PF pace with multiple Hall of Fame candidates");
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Auto-save to localStorage on GitHub Pages
+        function saveData() {
+            try {
+                localStorage.setItem('stallions_legends', JSON.stringify(players));
+            } catch (e) {
+                console.log('Auto-save not available');
+            }
+        }
+
+        // Auto-load from localStorage on GitHub Pages
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('stallions_legends');
+                if (saved) {
+                    players = JSON.parse(saved);
+                    addLogEntry("💾 AUTO-LOADED: Previous session data restored from browser storage");
+                }
+            } catch (e) {
+                console.log('Auto-load not available');
+            }
+        }
+
+        // Load saved data on page start
+        loadData();
+
+        // Save data whenever players array changes
+        const originalPush = players.push;
+        players.push = function(...args) {
+            const result = originalPush.apply(this, args);
+            saveData();
+            return result;
+        };
+    </script>
+</body>
+</html>
